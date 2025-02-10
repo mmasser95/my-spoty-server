@@ -1,8 +1,10 @@
 import Playlist from "#models/playlist"
+import PlaylistPolicy from "#policies/playlist_policy"
 
 export default class PlaylistRepository {
-  public async create(data: Partial<Playlist>) {
-    return await Playlist.create(data)
+  public async create(data: Partial<Playlist>, bouncer: any) {
+    if (await bouncer.with(PlaylistPolicy).allows('create'))
+      return await Playlist.create(data)
   }
 
   public async list() {
@@ -17,15 +19,18 @@ export default class PlaylistRepository {
       .firstOrFail()
   }
 
-  public async update(id: number, data: Partial<Playlist>) {
+  public async update(id: number, data: Partial<Playlist>, bouncer: any) {
     const playlist = await Playlist.findOrFail(id)
+    if (await bouncer.with(PlaylistPolicy).denies('edit', playlist))
+      throw new Error("Unauthorized")
     playlist.merge(data)
     await playlist.save()
     return playlist
   }
 
-  public async delete(id: number) {
+  public async delete(id: number, bouncer: any) {
     const playlist = await Playlist.findOrFail(id)
-    await playlist.delete()
+    if (await bouncer.with(PlaylistPolicy).allows('delete', playlist))
+      await playlist.delete()
   }
 }

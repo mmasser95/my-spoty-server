@@ -30,10 +30,10 @@ export default class PlaylistsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response }: HttpContext) {
+  async store({ request, response, bouncer }: HttpContext) {
     try {
       const playlistData = request.only(['name', 'userId'])
-      const playlist = await this.playlistRepository.create(playlistData)
+      const playlist = await this.playlistRepository.create(playlistData, bouncer)
       return response.created(playlist)
     } catch {
       return response.badRequest({ message: 'Error al crear la playlist' })
@@ -62,10 +62,10 @@ export default class PlaylistsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, response }: HttpContext) {
+  async update({ params, request, response, bouncer }: HttpContext) {
     try {
       const playlistData = request.only(['name', 'userId'])
-      const playlist = await this.playlistRepository.update(params.id, playlistData)
+      const playlist = await this.playlistRepository.update(params.id, playlistData, bouncer)
       return response.ok(playlist)
     } catch {
       return response.badRequest({ message: 'Error al actualizar la playlist' })
@@ -75,9 +75,9 @@ export default class PlaylistsController {
   /**
    * Delete record
    */
-  async destroy({ params, response }: HttpContext) {
+  async destroy({ params, response, bouncer }: HttpContext) {
     try {
-      await this.playlistRepository.delete(params.id)
+      await this.playlistRepository.delete(params.id, bouncer)
       return response.noContent()
     } catch {
       return response.badRequest({ message: 'Error al eliminar la playlist' })

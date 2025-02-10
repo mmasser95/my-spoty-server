@@ -12,4 +12,6 @@
 |
 */
 
-export const policies = {}
+export const policies = {
+  PlaylistPolicy: () => import('#policies/playlist_policy')
+}
