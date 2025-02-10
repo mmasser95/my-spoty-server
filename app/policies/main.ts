@@ -13,5 +13,6 @@
 */
 
 export const policies = {
+  LibraryPolicy: () => import('#policies/library_policy'),
   PlaylistPolicy: () => import('#policies/playlist_policy')
 }
