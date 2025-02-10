@@ -15,6 +15,7 @@ const ArtistsController = () => import('#controllers/artists_controller')
 const SongsController = () => import('#controllers/songs_controller')
 const PlaylistsController = () => import('#controllers/playlists_controller')
 const LibrariesController = () => import('#controllers/libraries_controller')
+const GenresController = () => import('#controllers/genres_controller')
 
 router.get('/', async () => {
   return {
@@ -28,3 +29,4 @@ router.resource('artists', ArtistsController)
 router.resource('songs', SongsController)
 router.resource('playlists', PlaylistsController)
 router.resource('libraries', LibrariesController)
+router.resource('genres', GenresController)
