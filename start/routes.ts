@@ -13,6 +13,7 @@ const UsersController = () => import('#controllers/users_controller')
 const AlbumsController = () => import('#controllers/albums_controller')
 const ArtistsController = () => import('#controllers/artists_controller')
 const SongsController = () => import('#controllers/songs_controller')
+const PlaylistsController = () => import('#controllers/playlists_controller')
 
 router.get('/', async () => {
   return {
@@ -24,3 +25,4 @@ router.resource('users', UsersController)
 router.resource('albums', AlbumsController)
 router.resource('artists', ArtistsController)
 router.resource('songs', SongsController)
+router.resource('playlists', PlaylistsController)
