@@ -37,4 +37,5 @@ router.post('/login', [LoginController, 'login'])
 router.post('/signin', [LoginController, 'signin'])
 
 router.post('/download', [SongsController, 'downloadMp3'])
-router.post('/song/search', [SongsController, 'searchYoutubeSong'])
+router.post('/youtube/search', [SongsController, 'searchYoutubeSong'])
+router.post('/spotify/search', [SongsController, 'searchSpotifySong'])

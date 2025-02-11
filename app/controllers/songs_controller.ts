@@ -2,13 +2,15 @@ import { inject } from '@adonisjs/core';
 import type { HttpContext } from '@adonisjs/core/http'
 import SongRepository from '../repositories/songRepository.js';
 import YoutubeService from '#services/youtube_service';
+import SpotifyService from '#services/spotify_service';
 
 @inject()
 export default class SongsController {
 
   constructor(
     private songRepository: SongRepository,
-    private youtubeService: YoutubeService
+    private youtubeService: YoutubeService,
+    private spotifyService: SpotifyService
   ) { }
 
   /**
@@ -102,6 +104,16 @@ export default class SongsController {
     try {
       const query = request.input("query")
       const results = await this.youtubeService.searchSong(query)
+      return response.ok(results)
+    } catch (error) {
+      return response.badRequest({ message: "Error en la request" })
+    }
+  }
+
+  async searchSpotifySong({ request, response }: HttpContext) {
+    try {
+      const query = request.input("query")
+      const results = await this.spotifyService.search(query, "track")
       return response.ok(results)
     } catch (error) {
       return response.badRequest({ message: "Error en la request" })
