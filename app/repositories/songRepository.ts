@@ -45,4 +45,13 @@ export default class SongRepository {
         await song.delete()
         return song
     }
+
+    public async searchBySpotify(spotifyId: string) {
+        return await Song.query()
+            .where('spotifyId', spotifyId)
+    }
+    public async searchByYoutube(youtubeId: string) {
+        return await Song.query()
+            .where('youtubeId', youtubeId).firstOrFail()
+    }
 }

@@ -37,7 +37,7 @@ export default class SongsController {
    */
   async store({ request, response }: HttpContext) {
     try {
-      const songData = request.only(['title', 'albumId', 'artistId', 'duration'])
+      const songData = request.only(['title', 'albumId', 'artistId', 'duration', 'spotifyId', 'youtubeId'])
       const song = await this.songRepository.create(songData)
       return response.created(song)
     } catch {
@@ -117,6 +117,43 @@ export default class SongsController {
       return response.ok(results)
     } catch (error) {
       return response.badRequest({ message: "Error en la request " + error })
+    }
+  }
+
+  async searchAllSongs({ request, response }: HttpContext) {
+    try {
+      const { query } = request.body()
+
+      // Buscar en YouTube
+      const youtubeResults = await this.youtubeService.searchSong(query)
+
+      // Para cada resultado de YouTube, verificar si existe en la base de datos
+      const resultsWithFilePath = []
+
+      for (const youtubeSong of youtubeResults) {
+        const { id: youtubeId } = youtubeSong
+        if (!youtubeId) {
+          resultsWithFilePath.push(youtubeSong)
+          continue
+        }
+        // Buscar en la base de datos si la canción ya existe usando el youtubeId
+        const existingSong = await this.songRepository.searchByYoutube(youtubeId)
+
+        if (existingSong) {
+          // Si la canción existe, añadir la información de la canción con la URL local (filePath)
+          resultsWithFilePath.push({
+            ...youtubeSong,
+            filePath: existingSong.filePath
+          })
+        } else {
+          // Si la canción no existe, simplemente añadir la información de YouTube
+          resultsWithFilePath.push(youtubeSong)
+        }
+      }
+
+      return response.ok(resultsWithFilePath)
+    } catch (error) {
+      return response.badRequest({ message: "Error en la búsqueda: " + error.message })
     }
   }
 }
