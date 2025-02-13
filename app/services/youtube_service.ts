@@ -44,6 +44,6 @@ export default class YoutubeService {
         }
     }
     public async searchSong(query: string) {
-        return await YouTube.search(query, { type: 'video', limit: 5 })
+        return await YouTube.search(query, { type: 'video', limit: 20 })
     }
 }

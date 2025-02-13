@@ -102,21 +102,21 @@ export default class SongsController {
 
   async searchYoutubeSong({ request, response }: HttpContext) {
     try {
-      const query = request.input("query")
+      const { query } = request.body()
       const results = await this.youtubeService.searchSong(query)
       return response.ok(results)
     } catch (error) {
-      return response.badRequest({ message: "Error en la request" })
+      return response.badRequest({ message: "Error en la request" + error })
     }
   }
 
   async searchSpotifySong({ request, response }: HttpContext) {
     try {
-      const query = request.input("query")
+      const { query } = request.body()
       const results = await this.spotifyService.search(query, "track")
       return response.ok(results)
     } catch (error) {
-      return response.badRequest({ message: "Error en la request" })
+      return response.badRequest({ message: "Error en la request " + error })
     }
   }
 }
