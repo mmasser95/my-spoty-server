@@ -61,6 +61,7 @@
     "luxon": "^3.5.0",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.6",
     "youtube-dl-exec": "^3.0.15",
     "youtube-sr": "^4.3.11"
   },
@@ -79,7 +80,19 @@
   "pnpm": {
     "overrides": {
       "strtok3": "8.0.1"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "@swc/core",
+      "@swc/core",
+      "es5-ext",
+      "es5-ext",
+      "sqlite3",
+      "youtube-dl-exec"
+    ],
+    "onlyBuiltDependencies": [
+      "sqlite3",
+      "youtube-dl-exec"
+    ]
   },
   "prettier": "@adonisjs/prettier-config"
 }
