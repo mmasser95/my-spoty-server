@@ -16,6 +16,9 @@ export default class Artist extends BaseModel {
   @column()
   declare bio: string | null
 
+  @column()
+  declare spotifyId:string|null
+
   @manyToMany(() => Song, {
     pivotTable: "artist_songs"
   })

@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.string('cover_image').nullable()
       table.text('description').nullable()
       table.integer('artist_id').unsigned().references('id').inTable('artists').onDelete('CASCADE')
+      table.string("spotify_id").nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

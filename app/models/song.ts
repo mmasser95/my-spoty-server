@@ -22,6 +22,12 @@ export default class Song extends BaseModel {
   @column()
   declare genreId: number | null
 
+  @column()
+  declare spotifyId: string | null
+
+  @column()
+  declare youtubeId: string | null
+
   @belongsTo(() => Album)
   declare album: BelongsTo<typeof Album>
 

@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('name').notNullable()
       table.string('photo').nullable()
       table.text('bio').nullable()
+      table.string('spotify_id').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

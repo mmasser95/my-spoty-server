@@ -10,6 +10,8 @@ export default class extends BaseSchema {
       table.string('file_path').notNullable()
       table.integer('album_id').unsigned().references('id').inTable('albums').onDelete('SET NULL')
       table.integer('genre_id').unsigned().references('id').inTable('genres').onDelete('SET NULL')
+      table.string("spotify_id").nullable()
+      table.string("youtube_id").nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

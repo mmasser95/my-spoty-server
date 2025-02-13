@@ -20,6 +20,9 @@ export default class Album extends BaseModel {
   @column()
   declare artistId: number | null
 
+  @column()
+  declare spotifyId: string | null
+
   @belongsTo(() => Artist)
   declare artist: BelongsTo<typeof Artist>
 
