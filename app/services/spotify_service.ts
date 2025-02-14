@@ -1,4 +1,6 @@
+import Song from "#models/song";
 import env from "#start/env";
+import { SpotifySearch } from "../types/SpotifySearch.js";
 
 export default class SpotifyService {
     private clientId = env.get("SPOTIFY_CLIENT_ID")
@@ -50,15 +52,34 @@ export default class SpotifyService {
         if (!response.ok) {
             throw new Error(`Error en la petición a Spotify: ${response.statusText}`);
         }
-
-        return response.json();
+        //@ts-ignore
+        let data = await response.json();
+        return data
     }
 
     /**
      * 🔍 Buscar en Spotify (artistas, álbumes, canciones, playlists)
      */
     public async search(query: string, type: "artist" | "track" | "album" | "playlist") {
-        return this.querySpotify("search", { q: query, type });
+        const data = await this.querySpotify("search", { q: query, type });
+        const tracks = data.tracks.items
+        console.log(data);
+        
+        const spotifyIds = tracks.map((track:any) => track.id)
+
+        const downloadedTracks = await Song.query()
+            .whereIn('spotifyId', spotifyIds)
+            .select('spotifyId')
+        console.log(downloadedTracks);
+        
+        const downloadedIds = downloadedTracks.map((track) => track.spotifyId)
+        const tracksWithStatus= {
+            items: tracks.map((track:any) => ({
+                ...track,
+                isDownloaded: downloadedIds.includes(track.id)
+            }))
+        }
+        return tracksWithStatus
     }
 
     /**
