@@ -31,7 +31,7 @@ export default class AlbumsController {
    */
   async store({ request, response }: HttpContext) {
     try {
-      const albumData = request.only(['title', 'artistId', 'releaseDate'])
+      const albumData = request.only(['name', 'artistId', 'coverImage', 'description', 'spotifyId'])
       const album = await this.albumRepository.create(albumData)
       return response.created(album)
     } catch {

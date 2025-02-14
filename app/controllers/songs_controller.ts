@@ -3,12 +3,14 @@ import type { HttpContext } from '@adonisjs/core/http'
 import SongRepository from '../repositories/songRepository.js';
 import YoutubeService from '#services/youtube_service';
 import SpotifyService from '#services/spotify_service';
+import ArtistRepository from '../repositories/artistRepository.js';
 
 @inject()
 export default class SongsController {
 
   constructor(
     private songRepository: SongRepository,
+    private artistRepository: ArtistRepository,
     private youtubeService: YoutubeService,
     private spotifyService: SpotifyService
   ) { }
@@ -92,9 +94,17 @@ export default class SongsController {
 
   async downloadMp3({ request, response }: HttpContext) {
     try {
-      const url = request.input("url");
+      const { url, youtubeId, spotifyId, title, artists } = request.body()
+      const artistsIds = await this.artistRepository.getArtistsOrCreate(artists)
       const info = await this.youtubeService.downloadmp3(url)
-      return response.ok(info)
+      const song = await this.songRepository.create({
+        youtubeId,
+        spotifyId,
+        title,
+        filePath: info,
+      })
+      await this.songRepository.addArtistsToSong(song, artistsIds)
+      return response.ok(song)
     } catch (error) {
       return response.badRequest({ message: "Error en la request" })
     }

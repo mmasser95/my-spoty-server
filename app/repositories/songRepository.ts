@@ -13,7 +13,7 @@ export default class SongRepository {
      * list
      */
     public async list() {
-        return await Song.query()
+        return await Song.query().preload("artists")
     }
 
     public async findById(id: number) {
@@ -53,5 +53,9 @@ export default class SongRepository {
     public async searchByYoutube(youtubeId: string) {
         return await Song.query()
             .where('youtubeId', youtubeId).firstOrFail()
+    }
+
+    public async addArtistsToSong(song: Song, artists: number[]) {
+        await song.related('artists').attach(artists)
     }
 }

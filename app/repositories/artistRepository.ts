@@ -34,4 +34,23 @@ export default class ArtistRepository {
         await artist.delete()
         return artist
     }
+
+    public async getArtistsOrCreate(
+        artists: {
+            name: string,
+            spotifyId: string
+        }[]
+    ) {
+        let artistIds = []
+        for (const artistsData of artists) {
+            let artist = await Artist.findBy('spotifyId', artistsData.spotifyId);
+            if (!artist)
+                artist = await Artist.create({
+                    name: artistsData.name,
+                    spotifyId: artistsData.spotifyId
+                })
+            artistIds.push(artist.id)
+        }
+        return artistIds
+    }
 }
