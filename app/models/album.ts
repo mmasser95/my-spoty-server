@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import Artist from './artist.js'
-import { type BelongsTo, type HasMany } from '@adonisjs/lucid/types/relations'
+import { type ManyToMany, type HasMany } from '@adonisjs/lucid/types/relations'
 import Song from './song.js'
 
 export default class Album extends BaseModel {
@@ -23,8 +23,10 @@ export default class Album extends BaseModel {
   @column()
   declare spotifyId: string | null
 
-  @belongsTo(() => Artist)
-  declare artist: BelongsTo<typeof Artist>
+  @manyToMany(() => Artist, {
+    pivotTable: 'album_artist',
+  })
+  declare artists: ManyToMany<typeof Artist>
 
   @hasMany(() => Song)
   declare songs: HasMany<typeof Song>
