@@ -1,6 +1,12 @@
 import Album from "#models/album";
+import { inject } from "@adonisjs/core";
+import ArtistRepository from "./artistRepository.js";
 
+@inject()
 export default class AlbumRepository {
+    constructor(
+        private artistRepository: ArtistRepository
+    ) { }
     public async create(data: Partial<Album>) {
         return await Album.create(data)
     }
@@ -13,7 +19,7 @@ export default class AlbumRepository {
         return await Album.query()
             .where('id', id)
             .preload('songs')
-            .preload('artist')
+            .preload('artists')
             .firstOrFail()
     }
 
@@ -28,5 +34,30 @@ export default class AlbumRepository {
         const album = await Album.findByOrFail('id', id)
         await album.delete()
         return album
+    }
+
+    public async getAlbumOrCreate(
+        album: {
+            name: string,
+            spotifyId: string,
+            coverImage:string
+            artists: { name: string, spotifyId: string }[]
+        }
+    ) {
+        let albumRecord = await Album.findBy('spotifyId', album.spotifyId);
+
+        if (!albumRecord) {
+            const artistIds = await this.artistRepository.getArtistsOrCreate(album.artists);
+
+            albumRecord = await Album.create({
+                name: album.name,
+                spotifyId: album.spotifyId,
+                coverImage:album.coverImage
+            });
+
+            await albumRecord.related('artists').attach(artistIds);
+        }
+
+        return albumRecord;
     }
 }

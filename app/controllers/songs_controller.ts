@@ -4,6 +4,7 @@ import SongRepository from '../repositories/songRepository.js';
 import YoutubeService from '#services/youtube_service';
 import SpotifyService from '#services/spotify_service';
 import ArtistRepository from '../repositories/artistRepository.js';
+import AlbumRepository from '../repositories/albumRepository.js';
 
 @inject()
 export default class SongsController {
@@ -11,6 +12,7 @@ export default class SongsController {
   constructor(
     private songRepository: SongRepository,
     private artistRepository: ArtistRepository,
+    private albumRepository: AlbumRepository,
     private youtubeService: YoutubeService,
     private spotifyService: SpotifyService
   ) { }
@@ -94,8 +96,9 @@ export default class SongsController {
 
   async downloadMp3({ request, response }: HttpContext) {
     try {
-      const { url, youtubeId, spotifyId, title, artists } = request.body()
+      const { url, youtubeId, spotifyId, title, artists, album } = request.body()
       const artistsIds = await this.artistRepository.getArtistsOrCreate(artists)
+      const albumEl = await this.albumRepository.getAlbumOrCreate(album)
       const info = await this.youtubeService.downloadmp3(url)
       const song = await this.songRepository.create({
         youtubeId,
@@ -104,6 +107,7 @@ export default class SongsController {
         filePath: info,
       })
       await this.songRepository.addArtistsToSong(song, artistsIds)
+      await this.songRepository.addAlbumToSong(song, albumEl)
       return response.ok(song)
     } catch (error) {
       return response.badRequest({ message: "Error en la request" })

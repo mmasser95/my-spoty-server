@@ -1,3 +1,4 @@
+import Album from "#models/album";
 import Song from "#models/song";
 
 export default class SongRepository {
@@ -13,7 +14,9 @@ export default class SongRepository {
      * list
      */
     public async list() {
-        return await Song.query().preload("artists")
+        return await Song.query()
+            .preload("artists")
+            .preload('album')
     }
 
     public async findById(id: number) {
@@ -58,4 +61,8 @@ export default class SongRepository {
     public async addArtistsToSong(song: Song, artists: number[]) {
         await song.related('artists').attach(artists)
     }
+    public async addAlbumToSong(song: Song, album: Album) {
+        await song.related('album').associate(album)
+    }
+
 }
