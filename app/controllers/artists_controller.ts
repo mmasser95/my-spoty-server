@@ -56,7 +56,7 @@ export default class ArtistsController {
   /**
    * Edit individual record
    */
-  async edit({ response }: HttpContext) { 
+  async edit({ response }: HttpContext) {
     return response.noContent()
   }
 
@@ -82,6 +82,16 @@ export default class ArtistsController {
       return response.noContent()
     } catch {
       return response.badRequest({ message: 'Error al eliminar el artista' })
+    }
+  }
+
+  async searchArtists({ request, response }: HttpContext) {
+    try {
+      const { query } = request.body()
+      const results = await this.artistRepository.search(query)
+      return response.ok(results)
+    } catch (error) {
+      return response.badRequest(`Error: ${error}`)
     }
   }
 }

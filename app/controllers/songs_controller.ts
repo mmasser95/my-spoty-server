@@ -110,7 +110,7 @@ export default class SongsController {
       await this.songRepository.addAlbumToSong(song, albumEl)
       return response.ok(song)
     } catch (error) {
-      return response.badRequest({ message: "Error en la request" })
+      return response.badRequest({ message: "Error en la request " + error })
     }
   }
 
@@ -134,7 +134,17 @@ export default class SongsController {
     }
   }
 
-  async searchAllSongs({ request, response }: HttpContext) {
+  async searchSongs({ request, response }: HttpContext) {
+    try {
+      const { query } = request.body()
+      const results = await this.songRepository.search(query)
+      return response.ok(results)
+    } catch (error) {
+      return response.badRequest(`Error: ${error}`)
+    }
+  }
+
+  async searchAllSongs2({ request, response }: HttpContext) {
     try {
       const { query } = request.body()
 

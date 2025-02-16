@@ -40,7 +40,7 @@ export default class AlbumRepository {
         album: {
             name: string,
             spotifyId: string,
-            coverImage:string
+            coverImage: string
             artists: { name: string, spotifyId: string }[]
         }
     ) {
@@ -52,12 +52,18 @@ export default class AlbumRepository {
             albumRecord = await Album.create({
                 name: album.name,
                 spotifyId: album.spotifyId,
-                coverImage:album.coverImage
+                coverImage: album.coverImage
             });
 
             await albumRecord.related('artists').attach(artistIds);
         }
 
         return albumRecord;
+    }
+    public async search(query: string) {
+        return await Album.query()
+            .whereILike('name', `%${query}%`)
+            .preload('artists')
+            .preload('songs')
     }
 }

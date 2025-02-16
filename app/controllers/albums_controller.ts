@@ -82,4 +82,14 @@ export default class AlbumsController {
       return response.badRequest({ message: 'Error al eliminar el álbum' })
     }
   }
+
+  async searchAlbums({ request, response }: HttpContext) {
+    try {
+      const { query } = request.body()
+      const results = await this.albumRepository.search(query)
+      return response.ok(results)
+    } catch (error) {
+      return response.badRequest(`Error: ${error}`)
+    }
+  }
 }
