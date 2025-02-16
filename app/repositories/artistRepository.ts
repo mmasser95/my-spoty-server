@@ -18,8 +18,8 @@ export default class ArtistRepository {
 
     public async search(query: string) {
         return await Artist.query()
-            .whereILike('name', `%${query}%`)
-            .preload('songs')
+            .whereLike('name', `%${query}%`)
+            .preload('albums')
     }
 
     public async update(id: number, data: Partial<Artist>) {

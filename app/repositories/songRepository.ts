@@ -30,7 +30,7 @@ export default class SongRepository {
 
     public async search(query: string) {
         return await Song.query()
-            .whereILike('title', `%${query}%`)
+            .whereLike('title', `%${query}%`)
             .preload('album')
             .preload('artists')
             .preload('genre')

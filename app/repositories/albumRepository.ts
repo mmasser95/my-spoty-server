@@ -62,7 +62,7 @@ export default class AlbumRepository {
     }
     public async search(query: string) {
         return await Album.query()
-            .whereILike('name', `%${query}%`)
+            .whereLike('name', `%${query}%`)
             .preload('artists')
             .preload('songs')
     }
