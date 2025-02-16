@@ -86,7 +86,11 @@ export default class AlbumsController {
   async searchAlbums({ request, response }: HttpContext) {
     try {
       const { query } = request.body()
-      const results = await this.albumRepository.search(query)
+      let results
+      if (query === "")
+        results = await this.albumRepository.latestAlbums()
+      else
+        results = await this.albumRepository.search(query)
       return response.ok(results)
     } catch (error) {
       return response.badRequest(`Error: ${error}`)

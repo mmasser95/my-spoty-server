@@ -137,7 +137,11 @@ export default class SongsController {
   async searchSongs({ request, response }: HttpContext) {
     try {
       const { query } = request.body()
-      const results = await this.songRepository.search(query)
+      let results
+      if (query === "")
+        results = await this.songRepository.latestSongs()
+      else
+        results = await this.songRepository.search(query)
       return response.ok(results)
     } catch (error) {
       return response.badRequest(`Error: ${error}`)

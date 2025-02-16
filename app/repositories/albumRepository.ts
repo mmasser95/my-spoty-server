@@ -66,4 +66,9 @@ export default class AlbumRepository {
             .preload('artists')
             .preload('songs')
     }
+    public async latestAlbums() {
+        return await Album.query()
+            .orderBy('created_at', 'desc')
+            .limit(10)
+    }
 }

@@ -64,5 +64,9 @@ export default class SongRepository {
     public async addAlbumToSong(song: Song, album: Album) {
         await song.related('album').associate(album)
     }
-
+    public async latestSongs() {
+        return await Song.query()
+            .orderBy('created_at', 'desc')
+            .limit(10)
+    }
 }

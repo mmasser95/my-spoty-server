@@ -88,7 +88,11 @@ export default class ArtistsController {
   async searchArtists({ request, response }: HttpContext) {
     try {
       const { query } = request.body()
-      const results = await this.artistRepository.search(query)
+      let results
+      if (query === "")
+        results = await this.artistRepository.latestArtists()
+      else
+        results = await this.artistRepository.search(query)
       return response.ok(results)
     } catch (error) {
       return response.badRequest(`Error: ${error}`)

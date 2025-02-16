@@ -53,4 +53,9 @@ export default class ArtistRepository {
         }
         return artistIds
     }
+    public async latestArtists() {
+        return await Artist.query()
+            .orderBy('created_at', 'desc')
+            .limit(10)
+    }
 }
