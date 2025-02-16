@@ -87,7 +87,7 @@ export default class AlbumsController {
     try {
       const { query } = request.body()
       let results
-      if (query === "")
+      if (query === "" || !query)
         results = await this.albumRepository.latestAlbums()
       else
         results = await this.albumRepository.search(query)

@@ -138,7 +138,7 @@ export default class SongsController {
     try {
       const { query } = request.body()
       let results
-      if (query === "")
+      if (query == "" || !query)
         results = await this.songRepository.latestSongs()
       else
         results = await this.songRepository.search(query)

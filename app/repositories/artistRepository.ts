@@ -55,6 +55,8 @@ export default class ArtistRepository {
     }
     public async latestArtists() {
         return await Artist.query()
+            .preload('albums')
+            .preload('songs')
             .orderBy('created_at', 'desc')
             .limit(10)
     }

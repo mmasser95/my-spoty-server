@@ -89,7 +89,7 @@ export default class ArtistsController {
     try {
       const { query } = request.body()
       let results
-      if (query === "")
+      if (query === "" || !query)
         results = await this.artistRepository.latestArtists()
       else
         results = await this.artistRepository.search(query)
