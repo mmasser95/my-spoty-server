@@ -71,4 +71,12 @@ export default class SongRepository {
             .orderBy('created_at', 'desc')
             .limit(10)
     }
+    public async getSongsOfArtist(artistId: number) {
+        return await Song.query()
+            .whereHas('artists', (query) => {
+                query.where('artist_id', artistId) // Filtra por el ID del artista
+            })
+            .preload('album') // Si quieres traer el álbum de la canción
+            .preload('artists')
+    }
 }

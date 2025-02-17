@@ -148,6 +148,16 @@ export default class SongsController {
     }
   }
 
+  async getSongsOfArtist({ request, response }: HttpContext) {
+    try {
+      const artistId = request.param('id')
+      const results = await this.songRepository.getSongsOfArtist(artistId)
+      return response.ok(results)
+    } catch (error) {
+      return response.badRequest(`Error: ${error}`)
+    }
+  }
+
   async searchAllSongs2({ request, response }: HttpContext) {
     try {
       const { query } = request.body()
