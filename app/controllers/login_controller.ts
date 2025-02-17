@@ -12,8 +12,8 @@ export default class LoginController {
   ) { }
 
   async login({ request, response }: HttpContext) {
-    const email = request.input('email')
-    const password = request.input('password')
+    const { email, password } = request.body()
+    console.log(`Email: ${email} Password: ${password}`);
 
     try {
       const user = await this.loginRepository.login(email, password)
@@ -24,9 +24,7 @@ export default class LoginController {
   }
 
   async signin({ request, response }: HttpContext) {
-    const email = request.input('email')
-    const password = request.input('password')
-    const fullName = request.input('fullName')
+    const { email, password, fullName } = request.body()
     try {
       const user = await this.userRepository.create({ email, password, fullName })
       return response.created(user)
