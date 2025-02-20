@@ -30,10 +30,12 @@ export default class PlaylistsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, bouncer }: HttpContext) {
+  async store({ auth, request, response, bouncer }: HttpContext) {
     try {
-      const playlistData = request.only(['name', 'userId'])
-      const playlist = await this.playlistRepository.create(playlistData, bouncer)
+      const user = auth.user;
+      if (!user) return response.unauthorized({ message: 'Usuario no autorizado' })
+      const playlistData = request.body()
+      const playlist = await this.playlistRepository.create({ ...playlistData, userId: user.id }, bouncer)
       return response.created(playlist)
     } catch {
       return response.badRequest({ message: 'Error al crear la playlist' })
@@ -81,6 +83,25 @@ export default class PlaylistsController {
       return response.noContent()
     } catch {
       return response.badRequest({ message: 'Error al eliminar la playlist' })
+    }
+  }
+
+  async addSongToPlaylist({ params, response }: HttpContext) {
+    try {
+      const { id, songId } = params
+      await this.playlistRepository.addSongToPlaylist(id, songId)
+      return response.noContent()
+    } catch (error) {
+      return response.badRequest({ message: `Error al agregar la cancion a la playlist: ${error}` })
+    }
+  }
+  async deleteSongFromPlaylist({ params, response }: HttpContext) {
+    try {
+      const { id, songId } = params
+      await this.playlistRepository.deleteSongFromPlaylist(id, songId)
+      return response.noContent()
+    } catch (error) {
+      return response.badRequest({ message: `Error al eliminar cancion de la playlist: ${error}` })
     }
   }
 }

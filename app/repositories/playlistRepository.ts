@@ -33,4 +33,12 @@ export default class PlaylistRepository {
     if (await bouncer.with(PlaylistPolicy).allows('delete', playlist))
       await playlist.delete()
   }
+  public async addSongToPlaylist(playlistId: number, songId: number) {
+    const playlist = await Playlist.findOrFail(playlistId)
+    await playlist.related('songs').attach([songId])
+  }
+  public async deleteSongFromPlaylist(playlistId: number, songId: number) {
+    const playlist = await Playlist.findOrFail(playlistId)
+    await playlist.related('songs').detach([songId])
+  }
 }

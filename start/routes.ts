@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import { middleware } from './kernel.js'
 
 const UsersController = () => import('#controllers/users_controller')
 const AlbumsController = () => import('#controllers/albums_controller')
@@ -29,7 +30,6 @@ router.resource('users', UsersController)
 router.resource('albums', AlbumsController)
 router.resource('artists', ArtistsController)
 router.resource('songs', SongsController)
-router.resource('playlists', PlaylistsController)
 router.resource('libraries', LibrariesController)
 router.resource('genres', GenresController)
 
@@ -43,3 +43,9 @@ router.post('/songs/search', [SongsController, 'searchSongs'])
 router.post('/albums/search', [AlbumsController, 'searchAlbums'])
 router.post('/artists/search', [ArtistsController, 'searchArtists'])
 router.get('/artist/:id/songs', [SongsController, 'getSongsOfArtist'])
+
+router.group(() => {
+  router.resource('playlists', PlaylistsController)
+  router.post('/playlists/:id/songs/:idSong', [PlaylistsController, 'addSongToPlaylist'])
+  router.delete('/playlists/:id/songs/:idSong', [PlaylistsController, 'deleteSongFromPlaylist'])
+}).use(middleware.auth({ guards: ['api'] }))
