@@ -12,7 +12,11 @@ export default class ArtistRepository {
     public async findById(id: number) {
         return await Artist.query()
             .where('id', id)
-            .preload('songs')
+            .preload('songs', (songsQuery) => {
+                songsQuery
+                    .preload('album')
+                    .preload('artists')
+            })
             .firstOrFail()
     }
 
@@ -20,6 +24,11 @@ export default class ArtistRepository {
         return await Artist.query()
             .whereLike('name', `%${query}%`)
             .preload('albums')
+            .preload('songs', (songsQuery) => {
+                songsQuery
+                    .preload('album')
+                    .preload('artists')
+            })
     }
 
     public async update(id: number, data: Partial<Artist>) {
@@ -56,7 +65,11 @@ export default class ArtistRepository {
     public async latestArtists() {
         return await Artist.query()
             .preload('albums')
-            .preload('songs')
+            .preload('songs', (songsQuery) => {
+                songsQuery
+                    .preload('album')
+                    .preload('artists')
+            })
             .orderBy('created_at', 'desc')
             .limit(10)
     }

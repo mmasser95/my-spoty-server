@@ -14,7 +14,11 @@ export default class PlaylistRepository {
   public async findById(id: number) {
     return await Playlist.query()
       .where('id', id)
-      .preload('songs')
+      .preload('songs', (songsQuery) => {
+        songsQuery
+          .preload('album')
+          .preload('artists')
+      })
       .preload('user')
       .firstOrFail()
   }

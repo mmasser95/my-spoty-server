@@ -18,7 +18,11 @@ export default class AlbumRepository {
     public async findById(id: number) {
         return await Album.query()
             .where('id', id)
-            .preload('songs')
+            .preload('songs', (songsQuery) => {
+                songsQuery
+                    .preload('artists')
+                    .preload('album')
+            })
             .preload('artists')
             .firstOrFail()
     }
@@ -64,12 +68,20 @@ export default class AlbumRepository {
         return await Album.query()
             .whereLike('name', `%${query}%`)
             .preload('artists')
-            .preload('songs')
+            .preload('songs', (songsQuery) => {
+                songsQuery
+                    .preload('artists')
+                    .preload('album')
+            })
     }
     public async latestAlbums() {
         return await Album.query()
             .preload('artists')
-            .preload('songs')
+            .preload('songs', (songsQuery) => {
+                songsQuery
+                    .preload('artists')
+                    .preload('album')
+            })
             .orderBy('created_at', 'desc')
             .limit(10)
     }
