@@ -83,6 +83,6 @@ export default class AlbumRepository {
                     .preload('album')
             })
             .orderBy('created_at', 'desc')
-            .limit(10)
+            .limit(20)
     }
 }

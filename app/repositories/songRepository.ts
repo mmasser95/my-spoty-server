@@ -69,7 +69,7 @@ export default class SongRepository {
             .preload('album')
             .preload('artists')
             .orderBy('created_at', 'desc')
-            .limit(10)
+            .limit(20)
     }
     public async getSongsOfArtist(artistId: number) {
         return await Song.query()

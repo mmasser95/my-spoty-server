@@ -8,7 +8,9 @@ export default class PlaylistRepository {
   }
 
   public async list() {
-    return await Playlist.query().preload('songs').preload('user')
+    return await Playlist.query()
+      .preload('songs')
+      .preload('user')
   }
 
   public async findById(id: number) {
@@ -40,9 +42,11 @@ export default class PlaylistRepository {
   public async addSongToPlaylist(playlistId: number, songId: number) {
     const playlist = await Playlist.findOrFail(playlistId)
     await playlist.related('songs').attach([songId])
+    await playlist.save()
   }
   public async deleteSongFromPlaylist(playlistId: number, songId: number) {
     const playlist = await Playlist.findOrFail(playlistId)
     await playlist.related('songs').detach([songId])
+    await playlist.save()
   }
 }

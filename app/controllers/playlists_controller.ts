@@ -88,8 +88,8 @@ export default class PlaylistsController {
 
   async addSongToPlaylist({ params, response }: HttpContext) {
     try {
-      const { id, songId } = params
-      await this.playlistRepository.addSongToPlaylist(id, songId)
+      const { id, idSong } = params
+      await this.playlistRepository.addSongToPlaylist(id, idSong)
       return response.noContent()
     } catch (error) {
       return response.badRequest({ message: `Error al agregar la cancion a la playlist: ${error}` })
@@ -97,8 +97,8 @@ export default class PlaylistsController {
   }
   async deleteSongFromPlaylist({ params, response }: HttpContext) {
     try {
-      const { id, songId } = params
-      await this.playlistRepository.deleteSongFromPlaylist(id, songId)
+      const { id, idSong } = params
+      await this.playlistRepository.deleteSongFromPlaylist(id, idSong)
       return response.noContent()
     } catch (error) {
       return response.badRequest({ message: `Error al eliminar cancion de la playlist: ${error}` })

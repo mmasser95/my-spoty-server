@@ -71,6 +71,6 @@ export default class ArtistRepository {
                     .preload('artists')
             })
             .orderBy('created_at', 'desc')
-            .limit(10)
+            .limit(20)
     }
 }
