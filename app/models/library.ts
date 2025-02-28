@@ -8,7 +8,10 @@ export default class Library extends BaseModel {
   declare id: number
 
   @column()
-  declare path: string
+  declare name:string
+
+  @column()
+  declare paths: string
 
   @column()
   declare userId: number

@@ -30,7 +30,6 @@ router.resource('users', UsersController)
 router.resource('albums', AlbumsController)
 router.resource('artists', ArtistsController)
 router.resource('songs', SongsController)
-router.resource('libraries', LibrariesController)
 router.resource('genres', GenresController)
 
 router.post('/login', [LoginController, 'login'])
@@ -46,6 +45,7 @@ router.post('/artists/search', [ArtistsController, 'searchArtists'])
 router.get('/artist/:id/songs', [SongsController, 'getSongsOfArtist'])
 
 router.group(() => {
+  router.resource('libraries', LibrariesController)
   router.resource('playlists', PlaylistsController)
   router.post('/playlists/:id/songs/:idSong', [PlaylistsController, 'addSongToPlaylist'])
   router.delete('/playlists/:id/songs/:idSong', [PlaylistsController, 'deleteSongFromPlaylist'])

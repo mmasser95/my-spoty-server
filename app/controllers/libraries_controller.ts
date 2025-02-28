@@ -12,9 +12,12 @@ export default class LibrariesController {
   /**
    * Display a list of resource
    */
-  async index({ response }: HttpContext) {
+  async index({ response, auth }: HttpContext) {
     try {
-      const libraries = await this.libraryRepository.list()
+      const user = auth.user
+      if (!user)
+        return response.unauthorized()
+      const libraries = await this.libraryRepository.list(user.id)
       return response.ok(libraries)
     } catch {
       return response.internalServerError({ message: 'Error al obtener las bibliotecas' })
@@ -31,10 +34,13 @@ export default class LibrariesController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, bouncer }: HttpContext) {
+  async store({ request, response, bouncer, auth }: HttpContext) {
     try {
-      const libraryData = request.only(['userId', 'path'])
-      const library = await this.libraryRepository.create(libraryData, bouncer)
+      // const libraryData = request.only(['userId', 'path'])
+      const { name, paths } = request.body()
+      const userId = auth.user?.id
+
+      const library = await this.libraryRepository.create({ name, userId, paths }, bouncer)
       return response.created(library)
     } catch {
       return response.badRequest({ message: 'Error al crear la biblioteca' })
@@ -65,8 +71,8 @@ export default class LibrariesController {
    */
   async update({ params, request, response, bouncer }: HttpContext) {
     try {
-      const libraryData = request.only(['userId', 'path'])
-      const library = await this.libraryRepository.update(params.id, libraryData, bouncer)
+      const { name, paths } = request.body()
+      const library = await this.libraryRepository.update(params.id, {name,paths}, bouncer)
       return response.ok(library)
     } catch {
       return response.badRequest({ message: 'Error al actualizar la biblioteca' })

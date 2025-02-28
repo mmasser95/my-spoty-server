@@ -7,8 +7,9 @@ export default class LibraryRepository {
             return await Library.create(data)
     }
 
-    public async list() {
+    public async list(userId: number) {
         return await Library.query()
+            .where('userId', userId)
     }
 
     public async findById(id: number) {
