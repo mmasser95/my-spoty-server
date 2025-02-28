@@ -32,6 +32,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   /**
    * Variables Spotify
    */
-  SPOTIFY_CLIENT_ID:Env.schema.string(),
-  SPOTIFY_CLIENT_SECRET:Env.schema.string()
+  SPOTIFY_CLIENT_ID: Env.schema.string(),
+  SPOTIFY_CLIENT_SECRET: Env.schema.string(),
+
+  /**
+   * Variables Genius
+   */
+  GENIUS_CLIENT_ID: Env.schema.string(),
+  GENIUS_CLIENT_SECRET: Env.schema.string(),
+  GENIUS_ACCESS_TOKEN: Env.schema.string()
 })
