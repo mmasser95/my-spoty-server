@@ -9,8 +9,7 @@ export default class GeniusService {
         try {
             const query = `${artist} ${title}`
             const query_url = `${this.API_URL}/search?q=${encodeURIComponent(query)}`
-            console.log(query_url);
-            
+
             const res = await fetch(query_url, {
                 headers: {
                     'Authorization': `Bearer ${this.access_token}`
@@ -18,23 +17,19 @@ export default class GeniusService {
             })
             if (!res.ok)
                 throw new Error(await res.text());
-            let data: {
-                response: {
-                    hits: any
-                }
-            } = await res.json()
+            let data: any = await res.json()
             const hits = data.response.hits
             if (!hits || hits.length === 0)
                 throw new Error("Any song found");
-            
+
             let songPath
             for (const el of hits) {
-                if (el.result.primary_artist_names===artist){
+                if (el.result.primary_artist_names === artist) {
                     songPath = hits[0].result.url
                     break
                 }
             }
-            if(!songPath)
+            if (!songPath)
                 throw new Error("Not found");
 
             const lyrics = await this.scrapeLyrics(songPath)
@@ -59,7 +54,7 @@ export default class GeniusService {
             //     lyrics = $('.lyrics').html()
             // if (!lyrics)
             //     throw new Error("Lyrics not found");
-            $('div[data-lyrics-container="true"]').each((i, el) => {
+            $('div[data-lyrics-container="true"]').each((_, el) => {
                 $(el)
                     .contents()
                     .each((_, element) => {
