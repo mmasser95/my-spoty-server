@@ -58,6 +58,7 @@
     "@adonisjs/lucid": "^21.6.0",
     "@adonisjs/static": "^1.1.1",
     "@vinejs/vine": "^3.0.0",
+    "cheerio": "^1.0.0",
     "luxon": "^3.5.0",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",

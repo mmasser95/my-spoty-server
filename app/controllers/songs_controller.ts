@@ -5,6 +5,7 @@ import YoutubeService from '#services/youtube_service';
 import SpotifyService from '#services/spotify_service';
 import ArtistRepository from '../repositories/artistRepository.js';
 import AlbumRepository from '../repositories/albumRepository.js';
+import GeniusService from '#services/genius_service';
 
 @inject()
 export default class SongsController {
@@ -14,7 +15,8 @@ export default class SongsController {
     private artistRepository: ArtistRepository,
     private albumRepository: AlbumRepository,
     private youtubeService: YoutubeService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private geniusService: GeniusService
   ) { }
 
   /**
@@ -192,6 +194,16 @@ export default class SongsController {
       return response.ok(resultsWithFilePath)
     } catch (error) {
       return response.badRequest({ message: "Error en la búsqueda: " + error.message })
+    }
+  }
+
+  async getLyrics({ request, response }: HttpContext) {
+    const { artist, title } = request.body()
+    try {
+      const lyrics = await this.geniusService.getLyrics(artist, title)
+      return response.ok(lyrics)
+    } catch (error) {
+      return response.badRequest({ message: error })
     }
   }
 }
