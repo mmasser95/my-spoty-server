@@ -9,7 +9,8 @@ export default class GeniusService {
         try {
             const query = `${artist} ${title}`
             const query_url = `${this.API_URL}/search?q=${encodeURIComponent(query)}`
-
+            console.log(query_url);
+            
             const res = await fetch(query_url, {
                 headers: {
                     'Authorization': `Bearer ${this.access_token}`
@@ -22,12 +23,19 @@ export default class GeniusService {
                     hits: any
                 }
             } = await res.json()
-
             const hits = data.response.hits
             if (!hits || hits.length === 0)
                 throw new Error("Any song found");
-
-            const songPath = hits[0].result.url
+            
+            let songPath
+            for (const el of hits) {
+                if (el.result.primary_artist_names===artist){
+                    songPath = hits[0].result.url
+                    break
+                }
+            }
+            if(!songPath)
+                throw new Error("Not found");
 
             const lyrics = await this.scrapeLyrics(songPath)
 
